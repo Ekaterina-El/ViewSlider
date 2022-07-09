@@ -2,17 +2,13 @@ package com.somecompany.viewslider
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
-import com.somecompany.viewslider.model.SlideView
-import com.somecompany.viewslider.model.SlidersDatabase
-import com.somecompany.viewslider.model.SlidersDatabase.*
-import com.somecompany.viewslider.view.slider.SliderAdapter
-import com.somecompany.viewslider.view.slider.SliderFragment
-import kotlinx.android.synthetic.main.activity_main.*
+import com.somecompany.viewslider.model.auth.AuthDatabase
+import com.somecompany.viewslider.model.sliders.SlidersDatabase
 
 class MainActivity : AppCompatActivity() {
 
   val slidersDatabase = SlidersDatabase()
+  val authDatabase = AuthDatabase()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -20,7 +16,6 @@ class MainActivity : AppCompatActivity() {
     supportActionBar?.hide()
 
     slidersDatabase.startListeners()
-
   }
 }
 

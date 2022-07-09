@@ -1,4 +1,4 @@
-package com.somecompany.viewslider.model
+package com.somecompany.viewslider.model.sliders
 
 data class SlideView(
   var key: String? = "",

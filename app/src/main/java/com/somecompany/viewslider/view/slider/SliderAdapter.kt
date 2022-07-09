@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.somecompany.viewslider.R
-import com.somecompany.viewslider.model.SlideView
+import com.somecompany.viewslider.model.sliders.SlideView
 import kotlinx.android.synthetic.main.slider_item_container.view.*
 import java.lang.Exception
 
@@ -16,9 +16,37 @@ class SliderAdapter(
   val context: Context
 )
   : RecyclerView.Adapter<SliderAdapter.ImageSliderViewHolder>() {
-  inner class ImageSliderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+  inner class ImageSliderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    fun changeOpenState(isOpen: Boolean) {
+      itemView.lock_btn.visibility = if (isOpen) View.GONE else View.VISIBLE
+      itemView.edit_btn.visibility = if (isOpen) View.VISIBLE else View.GONE
+      itemView.delete_btn.visibility = if (isOpen) View.VISIBLE else View.GONE
+    }
+  }
+
+
+  override fun onViewAttachedToWindow(holder: ImageSliderViewHolder) {
+    super.onViewAttachedToWindow(holder)
+    holder.changeOpenState(isOpen)
+    currentView = holder
+
+    val item = items[holder.adapterPosition]
+
+    holder.itemView.delete_btn.setOnClickListener { onViewClickListener?.onDelete(item) }
+    holder.itemView.edit_btn.setOnClickListener { onViewClickListener?.onEdit(item) }
+    holder.itemView.lock_btn.setOnClickListener { onViewClickListener?.onUnlock() }
+  }
 
   private val items = mutableListOf<SlideView>()
+  private var isOpen = false;
+  private var currentView: ImageSliderViewHolder? = null
+
+  var onViewClickListener: OnViewClickListener? = null
+
+  fun setOpenState(state: Boolean) {
+    isOpen = state;
+    currentView?.changeOpenState(isOpen)
+  }
 
   fun addItem(item: SlideView) {
     items.add(item)
@@ -58,5 +86,13 @@ class SliderAdapter(
   fun clear() {
     items.clear()
     notifyDataSetChanged()
+  }
+
+  companion object {
+    interface OnViewClickListener {
+      fun onUnlock() {}
+      fun onEdit(slide: SlideView) {}
+      fun onDelete(slide: SlideView) {}
+    }
   }
 }

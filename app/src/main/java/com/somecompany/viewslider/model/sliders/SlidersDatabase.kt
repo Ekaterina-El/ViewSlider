@@ -1,4 +1,4 @@
-package com.somecompany.viewslider.model
+package com.somecompany.viewslider.model.sliders
 
 import android.util.Log
 import com.google.firebase.database.DataSnapshot
