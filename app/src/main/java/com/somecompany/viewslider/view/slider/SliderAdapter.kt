@@ -1,4 +1,4 @@
-package com.somecompany.viewslider
+package com.somecompany.viewslider.view.slider
 
 import android.content.Context
 import android.util.Log
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.somecompany.viewslider.R
 import com.somecompany.viewslider.model.SlideView
 import kotlinx.android.synthetic.main.slider_item_container.view.*
 import java.lang.Exception

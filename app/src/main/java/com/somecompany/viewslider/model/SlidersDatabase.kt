@@ -9,7 +9,7 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 
 class SlidersDatabase() {
-  private val onValueEventListeners = mutableListOf<OnValueEventListener>()
+  private var onValueEventListeners = mutableListOf<OnValueEventListener>()
   private val database = Firebase.database
   val slidersRef = database.getReference("sliders")
 
@@ -41,6 +41,10 @@ class SlidersDatabase() {
 
   fun addOnValueEventListener(listener: OnValueEventListener) {
     onValueEventListeners.add(listener)
+  }
+
+  fun removeOnValueEventListener(dbListener: OnValueEventListener) {
+    onValueEventListeners = onValueEventListeners.filter { it != dbListener }.toMutableList()
   }
 
   companion object {
