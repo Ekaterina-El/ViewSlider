@@ -12,14 +12,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-  lateinit var slidersDatabase: SlidersDatabase
+  val slidersDatabase = SlidersDatabase()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     supportActionBar?.hide()
 
-    slidersDatabase = SlidersDatabase()
     slidersDatabase.startListeners()
 
   }
