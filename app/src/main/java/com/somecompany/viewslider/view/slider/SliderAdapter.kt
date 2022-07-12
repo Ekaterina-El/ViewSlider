@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.slider_item_container.view.*
 import java.lang.Exception
 
 class SliderAdapter(
-  val context: Context
+  private val context: Context
 )
   : RecyclerView.Adapter<SliderAdapter.ImageSliderViewHolder>() {
   inner class ImageSliderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -65,7 +65,7 @@ class SliderAdapter(
     try {
       items.forEach { addItem(it as SlideView) }
     } catch (e: Exception) {
-      Log.w("addItems", "${e.localizedMessage}")
+      Log.w("addItems", e.localizedMessage)
     }
   }
 

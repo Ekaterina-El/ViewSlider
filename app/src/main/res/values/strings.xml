@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ViewSlider</string>
+    <string name="country">Country</string>
+    <string name="country_helper">The country in which this place is located</string>
+    <string name="placeName">Place name</string>
+    <string name="placeName_helper">Name of the place on the photo</string>
+    <string name="save_slide">Save slide</string>
 </resources>

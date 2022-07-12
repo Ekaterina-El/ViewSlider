@@ -2,12 +2,12 @@ package com.somecompany.viewslider.view.slider
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import com.somecompany.viewslider.MainActivity
 import com.somecompany.viewslider.R
 import com.somecompany.viewslider.model.auth.AuthDatabase
@@ -20,6 +20,7 @@ class SliderFragment : Fragment(R.layout.slider_fragment) {
   private lateinit var imageSliderAdapter: SliderAdapter
   private lateinit var sliderDatabase: SlidersDatabase
   private lateinit var authDatabase: AuthDatabase
+  private lateinit var navigator: NavController
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -36,7 +37,7 @@ class SliderFragment : Fragment(R.layout.slider_fragment) {
     }
   }
 
-  private val onSliderListener = object: SliderAdapter.Companion.OnViewClickListener {
+  private val onSliderListener = object : SliderAdapter.Companion.OnViewClickListener {
     override fun onUnlock() {
       super.onUnlock()
       showUnlockAlert()
@@ -44,6 +45,11 @@ class SliderFragment : Fragment(R.layout.slider_fragment) {
 
     override fun onEdit(slide: SlideView) {
       super.onEdit(slide)
+
+      val bundle = Bundle()
+      bundle.putSerializable("slide", slide)
+      val navigator = (requireActivity() as MainActivity).navController
+      navigator.navigate(R.id.action_sliderFragment_to_editSlideFragment, bundle)
     }
 
     override fun onDelete(slide: SlideView) {

@@ -7,5 +7,17 @@
     <fragment
         android:id="@+id/sliderFragment"
         android:name="com.somecompany.viewslider.view.slider.SliderFragment"
-        android:label="SliderFragment" />
+        android:label="SliderFragment" >
+        <action
+            android:id="@+id/action_sliderFragment_to_editSlideFragment"
+            app:destination="@id/editSlideFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editSlideFragment"
+        android:name="com.somecompany.viewslider.view.editSlide.EditSlideFragment"
+        android:label="EditSlideFragment" >
+        <argument
+            android:name="slide"
+            app:argType="com.somecompany.viewslider.model.sliders.SlideView" />
+    </fragment>
 </navigation>

@@ -51,6 +51,18 @@ class SlidersDatabase() {
     onValueEventListeners = onValueEventListeners.filter { it != dbListener }.toMutableList()
   }
 
+  fun editSlide(slide: SlideView, onSuccess: () -> Unit, onFailure: () -> Unit) {
+    val postValue = HashMap<String, Any>()
+    postValue["country"] = slide.country!!
+    postValue["placeName"] = slide.placeName!!
+    postValue["imageUrl"] = slide.imageUrl!!
+
+    slidersRef.child(slide.key!!)
+      .updateChildren(postValue)
+      .addOnSuccessListener { onSuccess() }
+      .addOnFailureListener { onFailure() }
+  }
+
   companion object {
     interface OnValueEventListener {
       fun onDataChange(items: List<SlideView>)
