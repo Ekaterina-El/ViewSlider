@@ -48,6 +48,7 @@ class SliderFragment : Fragment(R.layout.slider_fragment) {
 
     override fun onDelete(slide: SlideView) {
       super.onDelete(slide)
+      sliderDatabase.deleteSlide(slide.key!!)
     }
   }
 

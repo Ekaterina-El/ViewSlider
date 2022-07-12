@@ -37,6 +37,13 @@ class SliderAdapter(
     holder.itemView.lock_btn.setOnClickListener { onViewClickListener?.onUnlock() }
   }
 
+  override fun onViewDetachedFromWindow(holder: ImageSliderViewHolder) {
+    super.onViewDetachedFromWindow(holder)
+    holder.itemView.delete_btn.setOnClickListener(null)
+    holder.itemView.edit_btn.setOnClickListener(null)
+    holder.itemView.lock_btn.setOnClickListener(null)
+  }
+
   private val items = mutableListOf<SlideView>()
   private var isOpen = false;
   private var currentView: ImageSliderViewHolder? = null

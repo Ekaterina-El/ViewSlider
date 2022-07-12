@@ -39,6 +39,10 @@ class SlidersDatabase() {
     })
   }
 
+  fun deleteSlide(sliderId: String) {
+    slidersRef.child(sliderId).removeValue()
+  }
+
   fun addOnValueEventListener(listener: OnValueEventListener) {
     onValueEventListeners.add(listener)
   }
