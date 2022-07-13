@@ -19,15 +19,7 @@ class SlidersDatabase() {
         // Если слушателей нет, то нет необходимости обрабатывать данные
         if (onValueEventListeners.size == 0) return;
 
-        // Обработка данных - начало
-        val items = mutableListOf<SlideView>()
-        snapshot.children.forEach {
-          val item = it.getValue<SlideView>()         // Приведение значения к классу SlideView
-          item!!.key = it.key                         // Запись ключа элемента
-          //Log.w("slidersRef", item.toString())
-          items.add(item)
-        }
-        // Обработка данных - конец
+        val items = snapshotToSliders(snapshot)
 
         // Уведомляем всех слушателей об изменении
         onValueEventListeners.forEach { it.onDataChange(items) }
@@ -37,6 +29,18 @@ class SlidersDatabase() {
         Log.e("SliderDatabase","Error: [${error.code}] ${error.message}")
       }
     })
+  }
+
+  private fun snapshotToSliders(snapshot: DataSnapshot): List<SlideView> {
+    val items = mutableListOf<SlideView>()
+    snapshot.children.forEach {
+      val item = it.getValue<SlideView>()         // Приведение значения к классу SlideView
+      item!!.key = it.key                         // Запись ключа элемента
+      //Log.w("slidersRef", item.toString())
+      items.add(item)
+    }
+    return items
+
   }
 
   fun deleteSlide(sliderId: String) {
@@ -61,6 +65,19 @@ class SlidersDatabase() {
       .updateChildren(postValue)
       .addOnSuccessListener { onSuccess() }
       .addOnFailureListener { onFailure() }
+  }
+
+  fun getSlidersOnce(dbListener: SlidersDatabase.Companion.OnValueEventListener) {
+    slidersRef.addListenerForSingleValueEvent(object: ValueEventListener {
+      override fun onDataChange(snapshot: DataSnapshot) {
+        dbListener.onDataChange(snapshotToSliders(snapshot))
+      }
+
+      override fun onCancelled(error: DatabaseError) {
+        TODO("Not yet implemented")
+      }
+
+    })
   }
 
   companion object {

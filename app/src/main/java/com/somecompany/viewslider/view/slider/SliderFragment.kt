@@ -20,7 +20,6 @@ class SliderFragment : Fragment(R.layout.slider_fragment) {
   private lateinit var imageSliderAdapter: SliderAdapter
   private lateinit var sliderDatabase: SlidersDatabase
   private lateinit var authDatabase: AuthDatabase
-  private lateinit var navigator: NavController
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -32,6 +31,7 @@ class SliderFragment : Fragment(R.layout.slider_fragment) {
 
   private val DBListener = object : SlidersDatabase.Companion.OnValueEventListener {
     override fun onDataChange(items: List<SlideView>) {
+      Log.d("DBListener", "items: ${items.size}")
       imageSliderAdapter.clear()
       imageSliderAdapter.addItems(items)
     }
@@ -70,7 +70,9 @@ class SliderFragment : Fragment(R.layout.slider_fragment) {
       ) { _, _ ->
         val text = passwordEdit.text.toString()
         authDatabase.isCorrectPass(text) {
-          if (it) imageSliderAdapter.setOpenState(true)
+          if (it) {
+            imageSliderAdapter.setOpenState(true)
+          }
           else Toast.makeText(requireContext(), "Incorrect password", Toast.LENGTH_SHORT).show()
         }
 
@@ -84,10 +86,12 @@ class SliderFragment : Fragment(R.layout.slider_fragment) {
   override fun onResume() {
     super.onResume()
     sliderDatabase.addOnValueEventListener(DBListener)
+    sliderDatabase.getSlidersOnce(DBListener)
   }
 
-  override fun onDestroy() {
-    super.onDestroy()
+
+  override fun onDestroyView() {
+    super.onDestroyView()
     sliderDatabase.removeOnValueEventListener(DBListener)
   }
 
