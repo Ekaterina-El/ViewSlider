@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
 import com.somecompany.viewslider.MainActivity
 import com.somecompany.viewslider.R
 import com.somecompany.viewslider.model.auth.AuthDatabase
@@ -34,6 +33,7 @@ class SliderFragment : Fragment(R.layout.slider_fragment) {
       Log.d("DBListener", "items: ${items.size}")
       imageSliderAdapter.clear()
       imageSliderAdapter.addItems(items)
+      imageSliderAdapter.addAddSlide()
     }
   }
 
@@ -43,7 +43,7 @@ class SliderFragment : Fragment(R.layout.slider_fragment) {
       showUnlockAlert()
     }
 
-    override fun onEdit(slide: SlideView) {
+    override fun onEdit(slide: SlideView?) {
       super.onEdit(slide)
 
       val bundle = Bundle()

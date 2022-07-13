@@ -1,7 +1,6 @@
 package com.somecompany.viewslider.view.slider
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import com.bumptech.glide.Glide
 import com.somecompany.viewslider.R
 import com.somecompany.viewslider.model.sliders.SlideView
 import kotlinx.android.synthetic.main.slider_item_container.view.*
-import java.lang.Exception
 
 class SliderAdapter(
   private val context: Context
@@ -31,6 +29,12 @@ class SliderAdapter(
     currentView = holder
 
     val item = items[holder.adapterPosition]
+    if (item.key == DEFAULT_PAGE) {
+      holder.itemView.setOnClickListener {
+        onViewClickListener?.onEdit(null)
+      }
+      return
+    }
 
     holder.itemView.delete_btn.setOnClickListener { onViewClickListener?.onDelete(item) }
     holder.itemView.edit_btn.setOnClickListener { onViewClickListener?.onEdit(item) }
@@ -60,27 +64,23 @@ class SliderAdapter(
     notifyItemInserted(items.size - 1)
   }
 
-  @JvmName("addItems1")
-  fun addItems(items: List<*>) {
-    try {
-      items.forEach { addItem(it as SlideView) }
-    } catch (e: Exception) {
-      Log.w("addItems", e.localizedMessage)
-    }
-  }
-
-
   fun addItems(items: List<SlideView>) {
     items.forEach { addItem(it) }
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageSliderViewHolder {
-    val view = LayoutInflater.from(parent.context).inflate(R.layout.slider_item_container, parent, false)
+    var view = LayoutInflater.from(parent.context).inflate(R.layout.slider_item_container, parent, false)
     return ImageSliderViewHolder(view)
   }
 
   override fun onBindViewHolder(holder: ImageSliderViewHolder, position: Int) {
     val item = items[position]
+    if (item.key == DEFAULT_PAGE) {
+      holder.itemView.photoInfo.visibility = View.GONE
+      holder.itemView.addSlide.visibility = View.VISIBLE
+      return
+    }
+
     holder.itemView.country.text = item.country
     holder.itemView.placeName.text = item.placeName
     Glide.with(context)
@@ -95,10 +95,16 @@ class SliderAdapter(
     notifyDataSetChanged()
   }
 
+  fun addAddSlide() {
+    items.add(SlideView(DEFAULT_PAGE))
+  }
+
   companion object {
+    const val DEFAULT_PAGE = "DEFAULT_PAGE"
+
     interface OnViewClickListener {
       fun onUnlock() {}
-      fun onEdit(slide: SlideView) {}
+      fun onEdit(slide: SlideView?) {}
       fun onDelete(slide: SlideView) {}
     }
   }

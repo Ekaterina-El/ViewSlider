@@ -21,7 +21,8 @@ class EditSlideFragment: Fragment(R.layout.edit_slide_fragment) {
     super.onViewCreated(view, savedInstanceState)
     sliderDatabase = (requireActivity() as MainActivity).slidersDatabase
 
-    slide = requireArguments().getSerializable("slide") as SlideView
+    var slideArg = requireArguments().getSerializable("slide")
+    slide = if (slideArg != null) slideArg as SlideView else SlideView()
 
     this.country_edit.setText(slide.country)
     this.place_name_edit.setText(slide.placeName)

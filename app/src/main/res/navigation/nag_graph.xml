@@ -18,6 +18,8 @@
         android:label="EditSlideFragment" >
         <argument
             android:name="slide"
-            app:argType="com.somecompany.viewslider.model.sliders.SlideView" />
+            app:argType="com.somecompany.viewslider.model.sliders.SlideView"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 </navigation>
