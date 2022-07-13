@@ -3,12 +3,13 @@ package com.somecompany.viewslider.model.sliders
 import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseException
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 
-class SlidersDatabase() {
+class SlidersDatabase {
   private var onValueEventListeners = mutableListOf<OnValueEventListener>()
   private val database = Firebase.database
   val slidersRef = database.getReference("sliders")
@@ -17,7 +18,7 @@ class SlidersDatabase() {
     slidersRef.addValueEventListener(object : ValueEventListener {
       override fun onDataChange(snapshot: DataSnapshot) {
         // Если слушателей нет, то нет необходимости обрабатывать данные
-        if (onValueEventListeners.size == 0) return;
+        if (onValueEventListeners.size == 0) return
 
         val items = snapshotToSliders(snapshot)
 
@@ -26,7 +27,7 @@ class SlidersDatabase() {
       }
 
       override fun onCancelled(error: DatabaseError) {
-        Log.e("SliderDatabase","Error: [${error.code}] ${error.message}")
+        Log.e("SliderDatabase", "Error: [${error.code}] ${error.message}")
       }
     })
   }
@@ -34,10 +35,14 @@ class SlidersDatabase() {
   private fun snapshotToSliders(snapshot: DataSnapshot): List<SlideView> {
     val items = mutableListOf<SlideView>()
     snapshot.children.forEach {
-      val item = it.getValue<SlideView>()         // Приведение значения к классу SlideView
-      item!!.key = it.key                         // Запись ключа элемента
-      //Log.w("slidersRef", item.toString())
-      items.add(item)
+      try {
+        val item = it.getValue<SlideView>()         // Приведение значения к классу SlideView
+        item!!.key = it.key                         // Запись ключа элемента
+        //Log.w("slidersRef", item.toString())
+        items.add(item)
+      } catch (e: DatabaseException) {
+      }
+
     }
     return items
 
@@ -61,20 +66,35 @@ class SlidersDatabase() {
     postValue["placeName"] = slide.placeName!!
     postValue["imageUrl"] = slide.imageUrl!!
 
-    slidersRef.child(slide.key!!)
-      .updateChildren(postValue)
-      .addOnSuccessListener { onSuccess() }
-      .addOnFailureListener { onFailure() }
+
+    if (slide.key != "") {
+      Log.d("NewChild 1", "key: ${slide.key == null}")
+
+      slidersRef.child(slide.key!!)
+        .updateChildren(postValue)
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onFailure() }
+    } else {
+      val child = slidersRef.push()
+      Log.d("NewChild 2", "key: ${child.key}")
+      slidersRef.child(child.key!!).updateChildren(postValue)
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onFailure() }
+
+//      slidersRef.child(System.currentTimeMillis().toString()).setValue(postValue)
+//        .addOnSuccessListener { onSuccess() }
+//        .addOnFailureListener { onFailure() }
+    }
+
   }
 
-  fun getSlidersOnce(dbListener: SlidersDatabase.Companion.OnValueEventListener) {
-    slidersRef.addListenerForSingleValueEvent(object: ValueEventListener {
+  fun getSlidersOnce(dbListener: OnValueEventListener) {
+    slidersRef.addListenerForSingleValueEvent(object : ValueEventListener {
       override fun onDataChange(snapshot: DataSnapshot) {
         dbListener.onDataChange(snapshotToSliders(snapshot))
       }
 
       override fun onCancelled(error: DatabaseError) {
-        TODO("Not yet implemented")
       }
 
     })

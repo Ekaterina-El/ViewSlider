@@ -31,7 +31,7 @@ class SliderAdapter(
     val item = items[holder.adapterPosition]
     if (item.key == DEFAULT_PAGE) {
       holder.itemView.setOnClickListener {
-        onViewClickListener?.onEdit(null)
+        if (isOpen) onViewClickListener?.onEdit(null)
       }
       return
     }
